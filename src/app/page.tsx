@@ -10,6 +10,7 @@ import { LeadFormSection } from "@/components/sections/LeadFormSection";
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection";
 import { Footer } from "@/components/sections/Footer";
 import { WhatsAppFab } from "@/components/sections/WhatsAppFab";
+import { LuisaChatWidget } from "@/components/sections/LuisaChatWidget";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,7 @@ export default function HomePage() {
       </main>
       <Footer />
       <WhatsAppFab />
+      <LuisaChatWidget />
     </>
   );
 }

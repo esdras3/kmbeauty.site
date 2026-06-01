@@ -1,6 +1,7 @@
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { WhatsAppFab } from "@/components/sections/WhatsAppFab";
+import { LuisaChatWidget } from "@/components/sections/LuisaChatWidget";
 import { LeadFormSection } from "@/components/sections/LeadFormSection";
 import type { Metadata } from "next";
 
@@ -22,13 +23,14 @@ export default function ContatoPage() {
             </h2>
             <p className="text-km-muted mb-6">
               Clique no botão verde e converse diretamente pelo WhatsApp.
-              A nossa assistente Luísa também estará disponível em breve no chat do site.
+              A nossa assistente Luísa também está disponível no chat — clique no botão 🌸.
             </p>
           </div>
         </section>
       </main>
       <Footer />
       <WhatsAppFab />
+      <LuisaChatWidget />
     </>
   );
 }
