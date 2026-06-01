@@ -1,10 +1,18 @@
+import Image from "next/image";
+
 export function AboutSection() {
   return (
     <section id="sobre" className="section-padding bg-km-bg">
       <div className="container-km">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="rounded-card bg-km-border aspect-[4/5] flex items-center justify-center">
-            <span className="text-km-muted text-sm">Foto Dra. Kelly Macedo</span>
+          <div className="rounded-card overflow-hidden aspect-[4/5] relative">
+            <Image
+              src="/img_dr_kelly/dr_kelly.avif"
+              alt="Dra. Kelly Macedo — Especialista em Estética Avançada"
+              fill
+              className="object-cover object-top"
+              priority
+            />
           </div>
           <div>
             <p className="text-km-gold font-semibold text-sm tracking-widest uppercase mb-4">
