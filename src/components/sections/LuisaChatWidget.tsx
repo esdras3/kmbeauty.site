@@ -227,4 +227,8 @@ export function LuisaChatWidget() {
               </svg>
             </button>
           </form>
-        </
+        </div>
+      )}
+    </>
+  );
+}

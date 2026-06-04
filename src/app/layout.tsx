@@ -35,4 +35,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ childre
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="pt-BR" className={poppins.variable}>
+      <body>
+        {children}
+        <WhatsAppFab />
+        <LuisaChatWidget />
+      </body>
+    </html>
+  );
+}
