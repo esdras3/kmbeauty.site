@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F6F6F6;
+  --foreground: #111111;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist);
+
+  /* KM Beauty brand palette */
+  --color-km-dark:      #1A1A1A;
+  --color-km-dark-soft: #252525;
+  --color-km-gold:      #C49030;
+  --color-km-gold-dark: #9A7020;
+  --color-km-bg:        #F6F6F6;
+  --color-km-surface:   #FFFFFF;
+  --color-km-border:    #E8E8E8;
+  --color-km-muted:     #6B6B6B;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist), system-ui, sans-serif;
+}

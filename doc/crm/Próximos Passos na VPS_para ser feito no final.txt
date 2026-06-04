@@ -1,0 +1,4 @@
+Próximos Passos na VPS
+1. Configuração no Paperclip AI / OpenClaw: Crie o profile da "Luisa", definindo o prompt de sistema dela com foco em atendimento de clínicas de estética, fornecendo a ela acesso às informações dos procedimentos (valores, indicações) para que ela possa negociar antes do transbordo humano.
+
+2. Setup no n8n: Crie um workflow que escute as conversas iniciadas no site da Vercel (ou via WhatsApp do KM Beauty), passe pelo LLM na VPS, e dispare os dados estruturados do lead para a nova API do Antigravity criada pelo Claude Code.

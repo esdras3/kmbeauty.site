@@ -1,44 +1,29 @@
-const depoimentos = [
-  {
-    nome: "Ana Paula S.",
-    procedimento: "Harmonização Facial",
-    texto: "Resultado incrível e muito natural. A Dra. Kelly entendeu exatamente o que eu queria e superou minhas expectativas.",
-  },
-  {
-    nome: "Mariana C.",
-    procedimento: "Endolaser",
-    texto: "Fiz o Endolaser para papada e fiquei encantada. Recuperação rápida e resultado que eu não esperava tão bom.",
-  },
-  {
-    nome: "Fernanda R.",
-    procedimento: "Botox",
-    texto: "Já é minha terceira vez com a Dra. Kelly. Resultado sempre natural, nunca aquela cara de frozen. Super indico!",
-  },
-];
+import Link from "next/link";
 
 export function TestimonialsSection() {
   return (
-    <section className="section-padding bg-km-dark">
-      <div className="container-km">
-        <div className="text-center mb-12">
-          <p className="text-km-gold font-semibold text-sm tracking-widest uppercase mb-3">
-            Depoimentos
+    <section id="mentorias" className="py-20 md:py-28 bg-gradient-to-br from-[#0a0a0a] via-[#111] to-[#1a1a1a]">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-km-gold font-body font-semibold text-xs tracking-[0.3em] uppercase mb-4">
+            Conhecimento
           </p>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-white">
-            O que dizem nossas pacientes
+          <h2 className="font-heading text-3xl md:text-5xl font-bold text-white mb-6">
+            Mentorias em Estética Avançada
           </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {depoimentos.map((d) => (
-            <div key={d.nome} className="bg-white/5 border border-white/10 rounded-card p-6 flex flex-col gap-4">
-              <p className="text-km-gold text-xl font-heading">"</p>
-              <p className="text-white/80 text-sm leading-relaxed flex-1">{d.texto}</p>
-              <div>
-                <div className="font-semibold text-white text-sm">{d.nome}</div>
-                <div className="text-km-gold text-xs mt-0.5">{d.procedimento}</div>
-              </div>
-            </div>
-          ))}
+          <div className="w-12 h-0.5 bg-km-gold mx-auto mb-6" />
+          <p className="text-white/60 font-body text-lg leading-relaxed mb-10">
+            Harmonização Facial e Corporal com quem é referência no assunto.
+          </p>
+          <p className="text-white/40 font-body text-base leading-relaxed mb-10">
+            A Dra. Kelly Macedo compartilha sua expertise em mentorias e cursos exclusivos para profissionais da área estética que desejam elevar seus resultados e expandir sua prática clínica com segurança e técnica avançada.
+          </p>
+          <Link
+            href="/contato"
+            className="inline-flex items-center gap-2 bg-km-gold hover:bg-km-gold-hover text-white font-body font-semibold px-8 py-4 rounded-full transition-all duration-300 text-sm"
+          >
+            Saiba mais! ›
+          </Link>
         </div>
       </div>
     </section>

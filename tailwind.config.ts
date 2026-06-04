@@ -8,18 +8,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "km-gold":       "#C49030",
-        "km-gold-hover": "#A97A28",
-        "km-dark":       "#1A1A1A",
+        "km-gold":       "#A2770D",
+        "km-gold-hover": "#8A650B",
+        "km-dark":       "#171413",
         "km-surface":    "#FFFFFF",
-        "km-bg":         "#F6F6F6",
-        "km-text":       "#1A1A1A",
-        "km-muted":      "#6B6B6B",
-        "km-border":     "#E5E5E5",
+        "km-bg":         "#F4F1EA",
+        "km-text":       "#211B17",
+        "km-muted":      "#4F4841",
+        "km-border":     "#D9D1C7",
       },
       fontFamily: {
-        heading: ["var(--font-playfair)", "Georgia", "serif"],
-        body:    ["var(--font-inter)", "Arial", "sans-serif"],
+        heading: ["var(--font-poppins)", "Arial", "sans-serif"],
+        body:    ["var(--font-poppins)", "Arial", "sans-serif"],
       },
       borderRadius: {
         card: "16px",
@@ -28,6 +28,7 @@ const config: Config = {
       boxShadow: {
         card: "0 8px 32px rgba(26, 26, 26, 0.08)",
         gold: "0 4px 16px rgba(196, 144, 48, 0.25)",
+        soft: "0 20px 60px rgba(17, 17, 17, 0.12)",
       },
     },
   },

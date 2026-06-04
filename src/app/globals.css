@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-playfair: 'Playfair Display', Georgia, serif;
-  --font-inter: 'Inter', Arial, sans-serif;
+  --font-poppins: 'Poppins', Arial, sans-serif;
 }
 
 html {
@@ -13,6 +12,17 @@ html {
 
 body {
   @apply bg-km-bg text-km-text font-body antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 @layer utilities {
@@ -20,7 +30,7 @@ body {
     @apply py-16 md:py-24 px-4 md:px-8;
   }
   .container-km {
-    @apply max-w-6xl mx-auto;
+    @apply mx-auto max-w-7xl;
   }
   .btn-primary {
     @apply bg-km-gold hover:bg-km-gold-hover text-white font-semibold px-6 py-3 rounded-btn transition-colors duration-200 shadow-gold;

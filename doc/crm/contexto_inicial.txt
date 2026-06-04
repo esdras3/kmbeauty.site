@@ -1,0 +1,9 @@
+A arquitetura do CRM para o KM Beauty deve se integrar perfeitamente à infraestrutura Dockerizada atual, mantendo o isolamento dos dados e aproveitando as ferramentas de orquestração já disponíveis.
+
+Para a infraestrutura na VPS, o banco de dados PostgreSQL existente gerenciará o modelo multi-tenant através de uma chave tenant_id em todas as tabelas, garantindo que os dados do KM Beauty fiquem isolados de outros tenants (como OrtoProMax ou Oliveira e Ferrari). A agente de IA "Luisa" será instanciada no OpenClaw e gerenciada pelo Paperclip AI, utilizando o n8n para automatizar a captura de leads do site hospedado na Vercel e o registro das interações no CRM.
+
+O design do painel administrativo deve seguir uma linha sóbria, robusta e focada na engenharia (Engineering-First), permitindo a gestão eficiente dos leads (baseado na estrutura de dados de procedimentos, retornos e agendamentos).
+
+Abaixo está o arquivo .md estruturado para orientar o Claude Code no VS Code durante a sessão de Vibe Coding, utilizando o Antigravity para a geração rápida das interfaces e APIs.
+
+diretório da vps: "C:\Users\Esdras\sites_app\servidor_email_openclaw\servidor_email_openclaw_app" (onde tem os env de configurações e referencia para implementar)

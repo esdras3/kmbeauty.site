@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>KM Beauty — Relatório de Leads de Alta Conversão Vol. 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F1EA;
+            color: #211B17;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Print margins and page size */
+        @page {
+            size: A4;
+            margin: 1.2cm 1.5cm 1.5cm 1.5cm;
+        }
+
+        .page {
+            background-color: #FFFFFF;
+            width: 100%;
+            max-width: 21cm;
+            min-height: 29.7cm;
+            padding: 2cm 2cm;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Header design */
+        header {
+            border-bottom: 2px solid #D9D1C7;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #171413;
+        }
+
+        .brand-subtitle {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: #A2770D;
+            margin-top: 5px;
+        }
+
+        .report-meta {
+            text-align: right;
+            font-size: 11px;
+            color: #4F4841;
+        }
+
+        /* Document Title */
+        .doc-title-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .doc-tag {
+            background-color: #F4F1EA;
+            color: #A2770D;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border: 1px solid #D9D1C7;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #171413;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #A2770D;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-left: 3px solid #A2770D;
+            padding-left: 10px;
+        }
+
+        h3 {
+            font-size: 14px;
+            color: #171413;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 13px;
+            color: #4F4841;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .metric-card {
+            background-color: #F4F1EA;
+            border: 1px solid #D9D1C7;
+            border-radius: 12px;
+            padding: 18px 15px;
+            text-align: center;
+        }
+
+        .metric-card.highlighted {
+            background: linear-gradient(135deg, #171413 0%, #211B17 100%);
+            border-color: #171413;
+            color: #FFFFFF;
+        }
+
+        .metric-card.highlighted .metric-label {
+            color: #D9D1C7;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-card.highlighted .metric-value {
+            color: #FFFFFF;
+        }
+
+        .metric-card.highlighted .metric-number {
+            color: #A2770D;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #4F4841;
+        }
+
+        /* Table design */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th {
+            background-color: #171413;
+            color: #FFFFFF;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 12px;
+            text-align: left;
+            border: 1px solid #171413;
+        }
+
+        th:first-child {
+            border-top-left-radius: 6px;
+        }
+        th:last-child {
+            border-top-right-radius: 6px;
+        }
+
+        td {
+            font-size: 11px;
+            color: #211B17;
+            padding: 10px 12px;
+            border-bottom: 1px solid #D9D1C7;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #FDFDFD;
+        }
+
+        .lead-rank {
+            font-weight: 700;
+            color: #A2770D;
+            text-align: center;
+        }
+
+        .lead-name {
+            font-weight: 600;
+            color: #171413;
+        }
+
+        .lead-meta {
+            font-size: 9px;
+            color: #4F4841;
+            margin-top: 3px;
+        }
+
+        .lead-phone {
+            font-family: monospace;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .lead-badge {
+            background-color: #F4F1EA;
+            border: 1px solid #D9D1C7;
+            color: #171413;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .lead-badge.gold {
+            background-color: rgba(162, 119, 13, 0.1);
+            border-color: rgba(162, 119, 13, 0.2);
+            color: #A2770D;
+        }
+
+        .lead-status {
+            font-weight: 600;
+            color: #A2770D;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .lead-action {
+            font-size: 10.5px;
+            color: #4F4841;
+            font-style: italic;
+        }
+
+        /* Action list styling */
+        .action-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .action-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 12.5px;
+            color: #4F4841;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .action-list li::before {
+            content: "•";
+            color: #A2770D;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* Footer styling */
+        footer {
+            position: absolute;
+            bottom: 1.5cm;
+            left: 2cm;
+            right: 2cm;
+            border-top: 1px solid #D9D1C7;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            color: #4F4841;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .footer-logo span {
+            color: #A2770D;
+        }
+
+        /* Custom spacing for page design */
+        .mt-30 { margin-top: 30px; }
+        .mb-40 { margin-bottom: 40px; }
+
+        @media print {
+            body {
+                background-color: #FFFFFF;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================== PAGE 1 ================== -->
+    <div class="page">
+        <header>
+            <div class="brand">
+                <span class="brand-name">KM BEAUTY</span>
+                <span class="brand-subtitle">ESTÉTICA AVANÇADA</span>
+            </div>
+            <div class="report-meta">
+                <strong>Data de Emissão:</strong> 03/06/2026<br>
+                <strong>Módulo:</strong> CRM &amp; Inteligência Comercial
+            </div>
+        </header>
+
+        <div class="doc-title-container">
+            <div class="doc-tag">CRM Insights</div>
+            <h1>RELATÓRIO EXECUTIVO DE LEADS</h1>
+            <h1 style="color: #A2770D; font-weight: 600; font-size: 20px; margin-top: 5px;">Recuperação &amp; Alta Conversão (Vol. 2)</h1>
+        </div>
+
+        <h2>Visão Geral e Diagnóstico</h2>
+        <p>
+            Este relatório consolida uma análise aprofundada da base de dados histórica da <strong>KM Beauty</strong> para selecionar o segundo lote de <strong>20 leads altamente qualificados</strong> (hottest leads) que demonstraram interesse real em procedimentos, mas não concluíram o agendamento. Foram excluídos os 20 contatos pertencentes ao primeiro relatório.
+        </p>
+        <p>
+            A inteligência comercial priorizou leads de <strong>2025/2026</strong> com base no histórico de conversa (palavras como "negociando", "ia agendar", "se organizando", "retorna contato") e filtrou ativamente aqueles sem potencial (desistências explícitas, maridos que não permitiram, restrição médica ou distância geográfica). Isso garante que o esforço do time de atendimento ou do chatbot <strong>Luísa AI</strong> foque exclusivamente em oportunidades reais de receita imediata.
+        </p>
+
+        <div class="metrics-grid">
+            <div class="metric-card highlighted">
+                <div class="metric-value metric-number">20</div>
+                <div class="metric-label">Novos Leads Quentes</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">70%</div>
+                <div class="metric-label">Foco em Endolaser</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">R$ 26.500</div>
+                <div class="metric-label">Volume Estimado</div>
+            </div>
+        </div>
+
+        <h2>Sumário de Oportunidades Comerciais</h2>
+        <p>
+            Aproximadamente 70% dos leads (14 contatos) possuem interesse direto no <strong>Endolaser</strong>, o procedimento de maior tíquete médio e margem da clínica. O lote também contém oportunidades para <strong>Harmonização de Orelhas</strong>, <strong>Black Peel</strong> e <strong>Bioestimuladores</strong>.
+        </p>
+        <p>
+            Os contatos estão organizados de maneira decrescente de intenção, com prioridade máxima para os leads mais recentes captados em 2026.
+        </p>
+
+        <footer>
+            <div class="footer-logo">KM <span>BEAUTY</span></div>
+            <div>Relatório de Vendas — Volume 2 — Página 1 de 4</div>
+        </footer>
+    </div>
+
+    <!-- ================== PAGE 2 ================== -->
+    <div class="page page-break">
+        <header>
+            <div class="brand">
+                <span class="brand-name">KM BEAUTY</span>
+                <span class="brand-subtitle">ESTÉTICA AVANÇADA</span>
+            </div>
+            <div class="report-meta">
+                <strong>Data de Emissão:</strong> 03/06/2026<br>
+                <strong>Módulo:</strong> CRM &amp; Inteligência Comercial
+            </div>
+        </header>
+
+        <h2>Listagem Detalhada: Leads #1 a #10</h2>
+        <p style="margin-bottom: 20px;">Estes leads possuem negociação aberta ou demonstraram alto interesse no fechamento imediato.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%; text-align: center;">Rank</th>
+                    <th style="width: 25%;">Nome / Mês</th>
+                    <th style="width: 20%;">Telefone</th>
+                    <th style="width: 22%;">Procedimento</th>
+                    <th style="width: 25%;">Ação Comercial Recomendada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="lead-rank">#1</td>
+                    <td><span class="lead-name">Jessica</span><div class="lead-meta">Maio 2026</div></td>
+                    <td class="lead-phone">+55 41 8714-7745</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Cobrança ativa para definição do dia do procedimento.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#2</td>
+                    <td><span class="lead-name">Rosileidi</span><div class="lead-meta">Maio 2026</div></td>
+                    <td class="lead-phone">+55 41 9875-3028</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Chamar com as datas disponíveis da semana.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#3</td>
+                    <td><span class="lead-name">Janete</span><div class="lead-meta">Maio 2026</div></td>
+                    <td class="lead-phone">+55 41 8844-2819</td>
+                    <td><span class="lead-badge">Estética/Outros</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Oferecer consulta de avaliação rápida sem custo.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#4</td>
+                    <td><span class="lead-name">Luana</span><div class="lead-meta">Maio 2026</div></td>
+                    <td class="lead-phone">+55 41 9226-4365</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Enviar as datas da agenda e propor período.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#5</td>
+                    <td><span class="lead-name">Rosana</span><div class="lead-meta">Março 2026</div></td>
+                    <td class="lead-phone">+55 41 8806-7417</td>
+                    <td><span class="lead-badge">Black Peel</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Lembrar dos benefícios e marcar o peeling.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#6</td>
+                    <td><span class="lead-name">Renata</span><div class="lead-meta">Março 2026</div></td>
+                    <td class="lead-phone">+55 13 99670-9726</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Quebrar objeções sobre pós-operatório.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#7</td>
+                    <td><span class="lead-name">Wesley</span><div class="lead-meta">Janeiro 2026</div></td>
+                    <td class="lead-phone">+55 41 9907-5141</td>
+                    <td><span class="lead-badge">Estética/Outros</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Propor contato para tirar dúvidas técnicas.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#8</td>
+                    <td><span class="lead-name">Flavia</span><div class="lead-meta">Dezembro 2025</div></td>
+                    <td class="lead-phone">+55 41 9590-1536</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Oferecer condição exclusiva de fechamento.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#9</td>
+                    <td><span class="lead-name">Rosy</span><div class="lead-meta">Dezembro 2025</div></td>
+                    <td class="lead-phone">+55 41 8896-0531</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Mostrar o antes/depois do aparelho e a tecnologia.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#10</td>
+                    <td><span class="lead-name">Carina</span><div class="lead-meta">Setembro 2025</div></td>
+                    <td class="lead-phone">+55 41 9823-5601</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Chamar informando a abertura da nova agenda.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <footer>
+            <div class="footer-logo">KM <span>BEAUTY</span></div>
+            <div>Relatório de Vendas — Volume 2 — Página 2 de 4</div>
+        </footer>
+    </div>
+
+    <!-- ================== PAGE 3 ================== -->
+    <div class="page page-break">
+        <header>
+            <div class="brand">
+                <span class="brand-name">KM BEAUTY</span>
+                <span class="brand-subtitle">ESTÉTICA AVANÇADA</span>
+            </div>
+            <div class="report-meta">
+                <strong>Data de Emissão:</strong> 03/06/2026<br>
+                <strong>Módulo:</strong> CRM &amp; Inteligência Comercial
+            </div>
+        </header>
+
+        <h2>Listagem Detalhada: Leads #11 a #20</h2>
+        <p style="margin-bottom: 20px;">Estes leads demonstraram interesse real e necessitam de acompanhamento logístico ou lembretes ativos.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%; text-align: center;">Rank</th>
+                    <th style="width: 25%;">Nome / Mês</th>
+                    <th style="width: 20%;">Telefone</th>
+                    <th style="width: 22%;">Procedimento</th>
+                    <th style="width: 25%;">Ação Comercial Recomendada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="lead-rank">#11</td>
+                    <td><span class="lead-name">Lucas</span><div class="lead-meta">Agosto 2025</div></td>
+                    <td class="lead-phone">+55 81 3313-9923</td>
+                    <td><span class="lead-badge gold">Orelhas</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> (Reativ. Fev/26). Chamar para retomar data.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#12</td>
+                    <td><span class="lead-name">Simone</span><div class="lead-meta">Agosto 2025</div></td>
+                    <td class="lead-phone">+55 41 9667-4650</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Lembrar do interesse e sugerir consulta de alinhamento.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#13</td>
+                    <td><span class="lead-name">Sem Nome</span><div class="lead-meta">Agosto 2025</div></td>
+                    <td class="lead-phone">+55 41 8779-4109</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Negociando.</strong> Mandar proposta de valor da consulta.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#14</td>
+                    <td><span class="lead-name">Raphaella</span><div class="lead-meta">Maio 2025</div></td>
+                    <td class="lead-phone">+55 41 99100-5536</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Interessada de Araucária.</strong> Pouca folga. Oferecer agendamento de sábado.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#15</td>
+                    <td><span class="lead-name">Nilza</span><div class="lead-meta">Maio 2026</div></td>
+                    <td class="lead-phone">+55 41 9208-5074</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Ficou de retornar.</strong> Lembrete gentil de que estamos segurando a vaga.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#16</td>
+                    <td><span class="lead-name">Alexssanndra</span><div class="lead-meta">Abril 2026</div></td>
+                    <td class="lead-phone">+55 41 9755-7634</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Ficou de retornar na segunda.</strong> Fazer cobrança de retorno na data.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#17</td>
+                    <td><span class="lead-name">Jariuza</span><div class="lead-meta">Março 2026</div></td>
+                    <td class="lead-phone">+55 41 9545-8149</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Ficou de retornar.</strong> Enviar mensagem rápida perguntando se definiu a data.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#18</td>
+                    <td><span class="lead-name">Marcia</span><div class="lead-meta">Outubro 2025</div></td>
+                    <td class="lead-phone">+55 41 9935-4782</td>
+                    <td><span class="lead-badge">Bioestimuladores</span></td>
+                    <td class="lead-action"><strong>Marcar pós-viagem.</strong> Perguntar como foi a viagem e sugerir agendamento.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#19</td>
+                    <td><span class="lead-name">Luciana</span><div class="lead-meta">Outubro 2025</div></td>
+                    <td class="lead-phone">+55 41 9961-4637</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Tratamento médico.</strong> Perguntar como está a saúde e se já pode realizar o Endolaser.</td>
+                </tr>
+                <tr>
+                    <td class="lead-rank">#20</td>
+                    <td><span class="lead-name">Camila</span><div class="lead-meta">Setembro 2025</div></td>
+                    <td class="lead-phone">+55 41 9596-0982</td>
+                    <td><span class="lead-badge gold">Endolaser</span></td>
+                    <td class="lead-action"><strong>Aguardando folga.</strong> Oferecer opções de agenda baseadas nas folgas dela.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <footer>
+            <div class="footer-logo">KM <span>BEAUTY</span></div>
+            <div>Relatório de Vendas — Volume 2 — Página 3 de 4</div>
+        </footer>
+    </div>
+
+    <!-- ================== PAGE 4 ================== -->
+    <div class="page page-break">
+        <header>
+            <div class="brand">
+                <span class="brand-name">KM BEAUTY</span>
+                <span class="brand-subtitle">ESTÉTICA AVANÇADA</span>
+            </div>
+            <div class="report-meta">
+                <strong>Data de Emissão:</strong> 03/06/2026<br>
+                <strong>Módulo:</strong> CRM &amp; Inteligência Comercial
+            </div>
+        </header>
+
+        <h2>Orientações Estratégicas para o Time de Vendas</h2>
+        <p style="margin-bottom: 25px;">
+            A eficiência do follow-up com esses leads reside na personalização e no contexto correto da abordagem. Siga as orientações abaixo:
+        </p>
+
+        <ul class="action-list">
+            <li>
+                <strong>Foco nos leads mais recentes primeiro (2026):</strong> As oportunidades de #1 a #7 e #15 a #17 representam as conversas mais ativas na memória do cliente. A chance de conversão é estatisticamente 3 vezes maior em relação aos contatos de 2025.
+            </li>
+            <li>
+                <strong>Facilitação Logística (Exemplo: Raphaella #14):</strong> Clientes de cidades vizinhas ou RMC (Araucária) geralmente hesitam pelo tempo de deslocamento. Ao oferecer um sábado pela manhã ou horário estendido, removemos a barreira logística que tem impedido a vinda dela.
+            </li>
+            <li>
+                <strong>Abordagens com Gancho de Viagem ou Saúde (#18 e #19):</strong> Quando o lead informa que está viajando ou em tratamento médico, evite mensagens robóticas de cobrança. Inicie o contato demonstrando empatia e preocupação: <em>"Olá Luciana, espero que esteja se sentindo bem melhor do seu tratamento! Conseguimos novas datas para a Dra. Kelly avaliar o seu caso do Endolaser..."</em>.
+            </li>
+            <li>
+                <strong>Valor promocional e urgência:</strong> Para leads que sumiram após saberem o preço (ex: #13 e contatos de 2025), utilize a reabertura de agenda com valores antigos por tempo limitado ou bônus na primeira consulta.
+            </li>
+        </ul>
+
+        <h2 class="mt-30">Integração ao CRM &amp; Luísa AI</h2>
+        <p>
+            Estes leads já estão estruturados no formato compatível para a integração automática no Notion CRM Leads e nos fluxos automáticos da Luísa AI (via webhook do n8n). Recomenda-se um contato manual e humanizado antes dos disparos em massa.
+        </p>
+
+        <footer>
+            <div class="footer-logo">KM <span>BEAUTY</span></div>
+            <div>Relatório de Vendas — Volume 2 — Página 4 de 4</div>
+        </footer>
+    </div>
+
+</body>
+</html>

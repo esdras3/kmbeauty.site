@@ -12,12 +12,29 @@ interface Message {
 
 export function LuisaChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "welcome",
+      sender: "luisa",
+      text: "Olá! Seja bem-vinda à KM Beauty. 🌸\n\nSou a Luísa, assistente da Dra. Kelly Macedo. Posso te ajudar a conhecer nossos procedimentos e agendar sua avaliação.\n\nComo posso te ajudar?",
+    },
+  ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [sessionId, setSessionId] = useState("");
-  const [tooltipDismissed, setTooltipDismissed] = useState(false);
-  const [actions, setActions] = useState<LuisaChatAction[]>([]);
+  const [sessionId, setSessionId] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return (
+      window.localStorage.getItem("luisa_kmbeauty_session") ??
+      `site_${Math.random().toString(36).slice(2, 11)}`
+    );
+  });
+  const [tooltipDismissed, setTooltipDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.sessionStorage.getItem("luisa_kmbeauty_opened") === "true";
+  });
+  const [actions, setActions] = useState<LuisaChatAction[]>(
+    getDefaultLuisaActions()
+  );
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,18 +42,9 @@ export function LuisaChatWidget() {
   }, [messages, isTyping]);
 
   useEffect(() => {
-    const sid = localStorage.getItem("luisa_kmbeauty_session")
-      ?? "site_" + Math.random().toString(36).slice(2, 11);
-    localStorage.setItem("luisa_kmbeauty_session", sid);
-    setSessionId(sid);
-    setTooltipDismissed(sessionStorage.getItem("luisa_kmbeauty_opened") === "true");
-    setMessages([{
-      id: "welcome",
-      sender: "luisa",
-      text: "Olá! Seja bem-vinda à KM Beauty. 🌸\n\nSou a Luísa, assistente da Dra. Kelly Macedo. Posso te ajudar a conhecer nossos procedimentos e agendar sua avaliação.\n\nComo posso te ajudar?",
-    }]);
-    setActions(getDefaultLuisaActions());
-  }, []);
+    if (!sessionId) return;
+    window.localStorage.setItem("luisa_kmbeauty_session", sessionId);
+  }, [sessionId]);
 
   async function sendMessage(text: string) {
     if (!text.trim()) return;
@@ -78,7 +86,7 @@ export function LuisaChatWidget() {
       return;
     }
     if (action.type === "link") {
-      window.location.href = action.value;
+      window.location.assign(action.value);
       return;
     }
     sendMessage(action.value);
@@ -94,22 +102,22 @@ export function LuisaChatWidget() {
     <>
       {/* Tooltip de convite */}
       {!isOpen && !tooltipDismissed && (
-        <div className="fixed bottom-24 right-24 z-50 animate-bounce-slow select-none">
+        <div className="fixed bottom-36 right-2 z-50 select-none md:bottom-7 md:right-40">
           <div
             onClick={handleToggle}
-            className="relative bg-white text-km-dark border border-km-border px-4 py-2.5 rounded-xl shadow-card text-xs font-medium flex items-center gap-2 cursor-pointer max-w-[220px]"
+            className="relative flex max-w-[220px] cursor-pointer items-center gap-2 rounded-xl border border-km-border bg-white px-4 py-2.5 text-xs font-medium text-km-dark shadow-card md:max-w-[240px]"
           >
             <span>Dúvidas? Fale com a Luísa! 🌸</span>
             <button
               onClick={(e) => { e.stopPropagation(); setTooltipDismissed(true); }}
-              className="text-km-muted hover:text-km-dark p-0.5"
+              className="flex h-7 w-7 items-center justify-center rounded-full p-0.5 text-km-muted transition-colors hover:bg-km-bg hover:text-km-dark"
               aria-label="Fechar"
             >
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
             </button>
-            <div className="absolute right-[-6px] top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 bg-white border-r border-t border-km-border" />
+            <div className="absolute -bottom-[6px] right-6 h-3 w-3 rotate-45 border-r border-b border-km-border bg-white md:-right-[6px] md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:border-b-0 md:border-t" />
           </div>
         </div>
       )}
@@ -117,7 +125,7 @@ export function LuisaChatWidget() {
       {/* Botão flutuante */}
       <button
         onClick={handleToggle}
-        className="fixed bottom-6 right-24 z-50 w-14 h-14 bg-km-gold hover:bg-km-gold-hover text-white rounded-full shadow-gold flex items-center justify-center hover:scale-110 transition-all duration-300"
+        className="fixed bottom-[4.5rem] right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-km-gold text-white shadow-gold transition-all duration-300 hover:scale-110 hover:bg-km-gold-hover md:bottom-6 md:right-24"
         aria-label="Conversar com a Luísa"
       >
         {isOpen ? (
@@ -137,7 +145,7 @@ export function LuisaChatWidget() {
 
       {/* Painel do chat */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 md:right-24 z-50 w-[90vw] md:w-[400px] h-[540px] bg-km-surface rounded-card shadow-soft border border-km-border flex flex-col overflow-hidden">
+        <div className="fixed inset-x-3 bottom-[8.5rem] z-50 flex h-[min(68vh,520px)] flex-col overflow-hidden rounded-card border border-km-border bg-km-surface shadow-soft md:inset-x-auto md:bottom-24 md:right-24 md:h-[540px] md:w-[400px]">
           {/* Header */}
           <div className="bg-km-dark text-white px-5 py-4 flex items-center gap-3">
             <div className="w-10 h-10 bg-km-gold/20 rounded-full flex items-center justify-center text-lg border border-km-gold/40">
@@ -219,8 +227,4 @@ export function LuisaChatWidget() {
               </svg>
             </button>
           </form>
-        </div>
-      )}
-    </>
-  );
-}
+        </

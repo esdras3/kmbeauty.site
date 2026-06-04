@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  buildLocalLuisaReply,
+  shouldUseLocalLuisaReply,
+} from "@/lib/luisaKnowledge";
 
 const WEBHOOK_URL = process.env.KMBEAUTY_N8N_WEBHOOK_URL ?? "";
 const WEBHOOK_SECRET = process.env.KMBEAUTY_N8N_WEBHOOK_SECRET ?? "";
@@ -45,8 +49,19 @@ export async function POST(req: NextRequest) {
     }
 
     const data = (await n8nRes.json()) as { reply?: string; session_id?: string };
+    const remoteReply =
+      data.reply ?? "Desculpe, não consegui processar sua mensagem.";
+    const localReply = buildLocalLuisaReply(payload.message);
+    const finalReply = shouldUseLocalLuisaReply(
+      payload.message,
+      remoteReply,
+      localReply
+    )
+      ? localReply?.reply ?? remoteReply
+      : remoteReply;
+
     return NextResponse.json({
-      reply: data.reply ?? "Desculpe, não consegui processar sua mensagem.",
+      reply: finalReply,
       session_id: data.session_id ?? payload.session_id ?? "",
     });
   } catch {

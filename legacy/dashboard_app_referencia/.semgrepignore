@@ -1,0 +1,5 @@
+# Arquivos de variáveis de ambiente — gitignored, nunca commitados.
+.env
+.env.local
+.env.*
+*.env

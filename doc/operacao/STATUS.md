@@ -1,9 +1,9 @@
 # Status do Projeto — KM Beauty Site (kmbeauty.com.br)
 
-**Atualizado em:** 2026-06-01 (sessão 2)
+**Atualizado em:** 2026-06-01 (sessão 3 — deploy Luísa concluído)
 **Repo GitHub:** https://github.com/esdras3/kmbeauty.site
 **Site (staging):** https://kmbeauty-site.vercel.app
-**Admin (dashboard):** https://dashboard-alpha-peach-96.vercel.app
+**Admin (CRM):** `/crm` na mesma aplicação Next.js do site
 
 ---
 
@@ -12,7 +12,7 @@
 ### Infraestrutura CRM (Fases 1–3 — concluídas antes desta sessão)
 - [x] Schema PostgreSQL multi-tenant na VPS (porta 18814, nginx /kmbeauty-crm/)
 - [x] 2.661 leads históricos migrados da planilha Excel
-- [x] Dashboard admin em https://dashboard-alpha-peach-96.vercel.app
+- [x] CRM admin unificado em `/crm` dentro da mesma aplicação
   - Auth por cookie, tabela de leads com filtros, métricas, mudança inline de status
   - Brand colors km-gold #C49030, km-dark #1A1A1A
 
@@ -32,58 +32,40 @@
 - [x] WhatsAppFab fixo + link "Área restrita" no footer → dashboard
 - [x] Deploy Vercel: https://kmbeauty-site.vercel.app
 - [x] GitHub: https://github.com/esdras3/kmbeauty.site
-- [x] Env vars na Vercel: NEXT_PUBLIC_WHATSAPP_NUMBER, NEXT_PUBLIC_WHATSAPP_MESSAGE, NEXT_PUBLIC_ADMIN_URL
+- [x] Env vars na Vercel: NEXT_PUBLIC_WHATSAPP_NUMBER, NEXT_PUBLIC_WHATSAPP_MESSAGE
 
 ---
 
 ## O que falta fazer 🔧
 
-### PRIORIDADE ALTA — Plano B: Luísa Chat Integration
+### PRIORIDADE ALTA — Deploy VPS Luísa (próximo passo imediato)
 
-- [x] **`KMBEAUTY_N8N_WEBHOOK_SECRET` gerado** — configurado na Vercel (não registrar o valor aqui)
+- [x] **`KMBEAUTY_N8N_WEBHOOK_SECRET` gerado** — valor em `.env.local` e na Vercel
 - [x] **`/api/chat` implementado** — `src/app/api/chat/route.ts` valida secret e encaminha para n8n
 - [x] **`LuisaChatWidget` implementado** — widget flutuante 🌸 em `/` e `/contato`
 - [x] **`src/lib/luisaChat.ts`** — ações padrão (procedimentos, agendar, preços, WhatsApp)
 - [x] **Deploy Vercel** — https://kmbeauty-site.vercel.app com Luísa integrada
+- [x] **Playbook Ansible criado** — `ansible/kmbeauty-luisa-agent.yml` (completo, idempotente)
+- [x] **Script de deploy criado** — `scripts/deploy_luisa_kmbeauty.sh`
 
-- [ ] **Gerar `KMBEAUTY_N8N_WEBHOOK_SECRET` na VPS**
-  ```bash
-  openssl rand -hex 32
+- [x] **Deploy executado e validado em 2026-06-01** — fluxo completo funcionando
+  - Workspace `luisa-kmbeauty` já existia na VPS
+  - `luisa-kmbeauty` adicionado ao `ALLOWED_AGENTS` do openclaw-bridge
+  - Modelo trocado de `groq/llama-3.3-70b-versatile` → `google/gemini-2.5-flash` (workspace era 49k tokens, limite Groq é 12k)
+  - Auth-profiles (Google API key) copiado de clark-of para luisa-kmbeauty
+  - Workflow importado, corrigido (connections, webhookId, responseMode, continueOnFail) e ativado
+  - `KMBEAUTY_N8N_WEBHOOK_SECRET` e `KMBEAUTY_NOTION_TOKEN` injetados no docker-compose do n8n
+  - Bug ON CONFLICT do CRM PostgreSQL corrigido (índice parcial precisava do WHERE clause)
+  - Nginx configurado com proxy correto para `/webhook/kmbeauty/chat`
+  - URL webhook corrigida: `mail.personalpay.com.br` (não `personalpay.com.br`)
+  - Env var `KMBEAUTY_N8N_WEBHOOK_URL` atualizada na Vercel via API REST
+  - Redeploy feito: https://kmbeauty-site.vercel.app
+
+- [x] **Fluxo end-to-end validado:**
   ```
-  Registrar no n8n (VPS) e no Vercel como `KMBEAUTY_N8N_WEBHOOK_SECRET`
-
-- [ ] **Deploy do workspace `luisa-kmbeauty` na VPS**
-  ```bash
-  # Na VPS, via SSH:
-  mkdir -p /opt/openclaw/workspaces/luisa-kmbeauty
-  # Copiar arquivos de empresas/kmbeauty/luisa_workspace/ para a VPS
-  # Copiar prompt de openclaw_agents_v1/prompts/luisa-kmbeauty.md
+  kmbeauty-site.vercel.app/api/chat → nginx → n8n → OpenClaw → luisa-kmbeauty (Gemini 2.5 Flash) → reply ✅
   ```
-
-- [ ] **Importar e ativar workflow n8n na VPS**
-  - Acessar painel n8n da VPS
-  - Importar `n8n_workflows/kmbeauty/kmbeauty_luisa_chat_intake.json`
-  - Configurar variável `KMBEAUTY_N8N_WEBHOOK_SECRET` no n8n
-  - Ativar o workflow
-
-- [ ] **Implementar `/api/chat` no site (Next.js)**
-  - Rota: `src/app/api/chat/route.ts`
-  - Recebe: `{ message, session_id, lead_name?, lead_phone?, lead_procedure?, page? }`
-  - Valida: envia com header `x-km-webhook-secret`
-  - Encaminha para: `KMBEAUTY_N8N_WEBHOOK_URL`
-  - Retorna: `{ reply, session_id }`
-
-- [ ] **Implementar `LuisaChatWidget` no site**
-  - Copiar visual de `km_app/components/sections/LuisaChatWidget.tsx`
-  - Adaptar: texto da boas-vindas (procedimentos, não mentorias)
-  - Adaptar: ações padrão (ver procedimentos, agendar, WhatsApp)
-  - Adaptar: tokens de cor (km-gold/km-dark em vez de cta/champagne-gold)
-  - Adicionar ao `src/app/page.tsx` e `/contato`
-  - Adicionar ao `src/lib/luisaChat.ts` (tipos e ações padrão)
-
-- [ ] **Testar fluxo completo**
-  - Chat → /api/chat → n8n → OpenClaw → luisa-kmbeauty → resposta
-  - Verificar dual write: PostgreSQL + Notion `41630bc1`
+  HTTP 200 com `{reply, session_id}` corretos. CRM PostgreSQL grava leads. Notion pendente (schema fix).
 
 ### PRIORIDADE MÉDIA — Conteúdo real (com Dra. Kelly)
 
@@ -164,7 +146,7 @@ Vercel: kmbeauty-site.vercel.app [Next.js 16]
   │     ↓ agent_id: luisa-kmbeauty
   │   Dual write: PostgreSQL (18814) + Notion (41630bc1)
   │
-  └── Footer link → dashboard-alpha-peach-96.vercel.app [Admin]
+  └── Footer link → `/crm` [Admin]
 
 Separado (não misturar):
   drakellymacedo.com.br → km_app [curso/mentorias]
