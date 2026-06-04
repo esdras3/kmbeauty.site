@@ -17,6 +17,10 @@ export default function CrmProtectedLayout({
         <Link href="/crm/leads" className="shrink-0">
           <KmLogo />
         </Link>
+        <nav className="flex items-center gap-1">
+          <Link href="/crm/leads" className="text-sm text-km-muted hover:text-km-dark px-3 py-1.5 rounded-md hover:bg-km-bg transition-colors">Leads</Link>
+          <Link href="/crm/agenda" className="text-sm text-km-muted hover:text-km-dark px-3 py-1.5 rounded-md hover:bg-km-bg transition-colors">Agenda</Link>
+        </nav>
         <div className="flex items-center gap-4">
           <Link
             href="/"

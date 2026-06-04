@@ -1,0 +1,214 @@
+{
+  "name": "KM Beauty — Agendamento via Luísa",
+  "nodes": [
+    {
+      "name": "Webhook Luísa",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "kmbeauty-chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "position": [240, 300]
+    },
+    {
+      "name": "Detectar intenção de agendar",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [{
+            "value1": "={{ $json.message.toLowerCase() }}",
+            "operation": "contains",
+            "value2": "agendar"
+          }]
+        }
+      },
+      "position": [460, 300]
+    },
+    {
+      "name": "OpenAI — Luísa responde",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Você é a Luísa, assistente virtual da KM Beauty, clínica de estética da Dra. Kelly Macedo em Curitiba. Seja acolhedora, profissional e direta. Para agendamentos, colete em sequência: 1) nome completo, 2) telefone com DDD, 3) procedimento de interesse, 4) preferência de data e horário. Confirme os dados antes de finalizar."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [680, 180]
+    },
+    {
+      "name": "Extrair dados do agendamento",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Extraia os dados de agendamento da conversa e retorne SOMENTE um JSON válido com os campos: nome, telefone, procedimento, data_hora_preferida (ISO 8601 ou null se não informado). Sem explicações."
+            },
+            {
+              "role": "user",
+              "content": "Mensagem: {{ $json.message }}\nContexto: {{ $json.session_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [680, 420]
+    },
+    {
+      "name": "Parse JSON extraído",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices[0].message.content;\ntry {\n  const dados = JSON.parse(raw);\n  return [{ json: dados }];\n} catch {\n  return [{ json: { nome: '', telefone: '', procedimento: '', data_hora_preferida: null } }];\n}"
+      },
+      "position": [900, 420]
+    },
+    {
+      "name": "Verificar disponibilidade — Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "parameters": {
+        "resource": "event",
+        "operation": "getAll",
+        "calendarId": "primary",
+        "timeMin": "={{ $json.data_hora_preferida ?? new Date().toISOString() }}",
+        "timeMax": "={{ new Date(new Date($json.data_hora_preferida ?? new Date()).getTime() + 3600000).toISOString() }}",
+        "options": {}
+      },
+      "position": [1120, 420]
+    },
+    {
+      "name": "Slot disponível?",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "number": [{
+            "value1": "={{ $json.length }}",
+            "operation": "equal",
+            "value2": 0
+          }]
+        }
+      },
+      "position": [1340, 420]
+    },
+    {
+      "name": "Criar evento — Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "primary",
+        "start": "={{ $('Parse JSON extraído').first().json.data_hora_preferida }}",
+        "end": "={{ new Date(new Date($('Parse JSON extraído').first().json.data_hora_preferida).getTime() + 3600000).toISOString() }}",
+        "summary": "={{ $('Parse JSON extraído').first().json.procedimento + ' — ' + $('Parse JSON extraído').first().json.nome }}",
+        "description": "Agendado pela Luísa (IA)\nCliente: {{ $('Parse JSON extraído').first().json.nome }}\nTelefone: {{ $('Parse JSON extraído').first().json.telefone }}\nProcedimento: {{ $('Parse JSON extraído').first().json.procedimento }}",
+        "options": {
+          "sendUpdates": "none"
+        }
+      },
+      "position": [1560, 300]
+    },
+    {
+      "name": "Salvar no CRM — VPS",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.KMBEAUTY_API_URL }}/api/agenda/agendamentos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "nome_cliente", "value": "={{ $('Parse JSON extraído').first().json.nome }}" },
+            { "name": "telefone_cliente", "value": "={{ $('Parse JSON extraído').first().json.telefone }}" },
+            { "name": "procedimento", "value": "={{ $('Parse JSON extraído').first().json.procedimento }}" },
+            { "name": "data_hora_inicio", "value": "={{ $('Parse JSON extraído').first().json.data_hora_preferida }}" },
+            { "name": "data_hora_fim", "value": "={{ new Date(new Date($('Parse JSON extraído').first().json.data_hora_preferida).getTime() + 3600000).toISOString() }}" },
+            { "name": "google_event_id", "value": "={{ $json.id }}" },
+            { "name": "status", "value": "confirmado" },
+            { "name": "origem", "value": "luisa" }
+          ]
+        }
+      },
+      "position": [1780, 300]
+    },
+    {
+      "name": "Notificar equipe — WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "phone", "value": "={{ $env.KMBEAUTY_WHATSAPP_NOTIFY }}" },
+            { "name": "text", "value": "🌸 *Novo agendamento via Luísa!*\n\n👤 *Cliente:* {{ $('Parse JSON extraído').first().json.nome }}\n📱 *Telefone:* {{ $('Parse JSON extraído').first().json.telefone }}\n💆 *Procedimento:* {{ $('Parse JSON extraído').first().json.procedimento }}\n📅 *Horário:* {{ new Date($('Parse JSON extraído').first().json.data_hora_preferida).toLocaleString('pt-BR') }}" }
+          ]
+        }
+      },
+      "position": [2000, 300]
+    },
+    {
+      "name": "Resposta confirmação",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ reply: '✅ Agendamento confirmado! ' + $(\\'Parse JSON extraído\\').first().json.nome + ', seu horário para ' + $(\\'Parse JSON extraído\\').first().json.procedimento + ' está reservado. A equipe da KM Beauty entrará em contato para confirmar os detalhes. 🌸', session_id: $(\\'Webhook Luísa\\').first().json.session_id }) }}"
+      },
+      "position": [2220, 300]
+    },
+    {
+      "name": "Resposta slot indisponível",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"reply\": \"Esse horário já está ocupado. Poderia me informar outra data ou horário de preferência? Temos disponibilidade de segunda a sexta das 9h às 18h e sábado das 9h às 13h. 🌸\", \"session_id\": \"{{ $('Webhook Luísa').first().json.session_id }}\" }"
+      },
+      "position": [1560, 540]
+    },
+    {
+      "name": "Resposta conversa normal",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ reply: $json.choices[0].message.content, session_id: $('Webhook Luísa').first().json.session_id }) }}"
+      },
+      "position": [900, 180]
+    }
+  ],
+  "connections": {
+    "Webhook Luísa": { "main": [[{ "node": "Detectar intenção de agendar", "type": "main", "index": 0 }]] },
+    "Detectar intenção de agendar": {
+      "main": [
+        [{ "node": "OpenAI — Luísa responde", "type": "main", "index": 0 }],
+        [{ "node": "Extrair dados do agendamento", "type": "main", "index": 0 }]
+      ]
+    },
+    "OpenAI — Luísa responde": { "main": [[{ "node": "Resposta conversa normal", "type": "main", "index": 0 }]] },
+    "Extrair dados do agendamento": { "main": [[{ "node": "Parse JSON extraído", "type": "main", "index": 0 }]] },
+    "Parse JSON extraído": { "main": [[{ "node": "Verificar disponibilidade — Google Calendar", "type": "main", "index": 0 }]] },
+    "Verificar disponibilidade — Google Calendar": { "main": [[{ "node": "Slot disponível?", "type": "main", "index": 0 }]] },
+    "Slot disponível?": {
+      "main": [
+        [{ "node": "Criar evento — Google Calendar", "type": "main", "index": 0 }],
+        [{ "node": "Resposta slot indisponível", "type": "main", "index": 0 }]
+      ]
+    },
+    "Criar evento — Google Calendar": { "main": [[{ "node": "Salvar no CRM — VPS", "type": "main", "index": 0 }]] },
+    "Salvar no CRM — VPS": { "main": [[{ "node": "Notificar equipe — WhatsApp", "type": "main", "index": 0 }]] },
+    "Notificar equipe — WhatsApp": { "main": [[{ "node": "Resposta confirmação", "type": "main", "index": 0 }]] }
+  }
+}
