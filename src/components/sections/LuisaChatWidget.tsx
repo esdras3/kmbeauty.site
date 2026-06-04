@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { getDefaultLuisaActions, type LuisaChatAction } from "@/lib/luisaChat";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 
@@ -11,6 +12,7 @@ interface Message {
 }
 
 export function LuisaChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -32,9 +34,14 @@ export function LuisaChatWidget() {
     if (typeof window === "undefined") return false;
     return window.sessionStorage.getItem("luisa_kmbeauty_opened") === "true";
   });
-  const [actions, setActions] = useState<LuisaChatAction[]>(
-    getDefaultLuisaActions()
+  const [actions, setActions] = useState<LuisaChatAction[]>(() =>
+    getDefaultLuisaActions(typeof window !== "undefined" ? window.location.pathname : undefined)
   );
+
+  // Atualiza ações quando a página muda (navegação sem reload)
+  useEffect(() => {
+    setActions(getDefaultLuisaActions(pathname));
+  }, [pathname]);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,7 +83,7 @@ export function LuisaChatWidget() {
       }]);
     } finally {
       setIsTyping(false);
-      setActions(getDefaultLuisaActions());
+      setActions(getDefaultLuisaActions(pathname));
     }
   }
 
